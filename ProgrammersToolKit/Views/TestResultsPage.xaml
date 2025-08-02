@@ -1,6 +1,6 @@
-<Page
+<UserControl
     x:Class="ProgrammersToolKit.Views.TestResultsPage"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:ProgrammersToolKit.Views">
     <Grid>
@@ -20,4 +20,4 @@
             </ListView>
         </StackPanel>
     </Grid>
-</Page>
+</UserControl>

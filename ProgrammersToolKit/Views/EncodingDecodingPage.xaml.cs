@@ -1,12 +1,13 @@
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
+using Avalonia.Interactivity;
+using Avalonia.Controls;
+using Avalonia.Controls;
 using System;
 using System.Text;
 using System.Web;
 
 namespace ProgrammersToolKit.Views
 {
-    public sealed partial class EncodingDecodingPage : Page
+    public partial class EncodingDecodingPage : UserControl
     {
         private readonly ProgrammersToolKit.Services.Interfaces.IEncodingDecodingService _service;
 

@@ -1,9 +1,10 @@
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
+using Avalonia.Interactivity;
+using Avalonia.Controls;
+using Avalonia.Controls;
 
 namespace ProgrammersToolKit.Views
 {
-    public sealed partial class DiffEditorPage : Page
+    public partial class DiffEditorPage : UserControl
     {
         public DiffEditorPage()
         {

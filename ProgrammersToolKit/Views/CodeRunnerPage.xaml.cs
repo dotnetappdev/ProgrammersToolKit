@@ -1,10 +1,11 @@
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
+using Avalonia.Interactivity;
+using Avalonia.Controls;
+using Avalonia.Controls;
 using ProgrammersToolKit.Services.Interfaces;
 
 namespace ProgrammersToolKit.Views
 {
-    public sealed partial class CodeRunnerPage : Page
+    public partial class CodeRunnerPage : UserControl
     {
         private readonly ICodeRunnerService _service;
         private readonly ObservableCollection<string> _testCases = new ObservableCollection<string>();

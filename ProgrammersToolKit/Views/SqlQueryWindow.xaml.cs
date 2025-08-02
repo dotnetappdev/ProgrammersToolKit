@@ -1,5 +1,6 @@
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
+using Avalonia.Interactivity;
+using Avalonia.Controls;
+using Avalonia.Controls;
 using System.Data;
 using System.Text.Json;
 using System.Xml.Linq;
@@ -7,7 +8,7 @@ using System.Linq;
 
 namespace ProgrammersToolKit.Views
 {
-    public sealed partial class SqlQueryWindow : Page
+    public partial class SqlQueryWindow : UserControl
     {
         public SqlQueryWindow()
         {

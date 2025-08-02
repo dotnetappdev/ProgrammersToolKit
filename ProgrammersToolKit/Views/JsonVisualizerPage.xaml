@@ -1,6 +1,6 @@
-<Page
+<UserControl
     x:Class="ProgrammersToolKit.Views.JsonVisualizerPage"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:ProgrammersToolKit.Views">
     <Grid Margin="10">
@@ -8,16 +8,16 @@
             <ColumnDefinition Width="2*"/>
             <ColumnDefinition Width="3*"/>
         </Grid.ColumnDefinitions>
-        <TextBox x:Name="JsonInputBox" AcceptsReturn="True" FontFamily="Consolas" FontSize="14" PlaceholderText="Paste or type JSON here..."/>
-        <Pivot Grid.Column="1">
-            <PivotItem Header="Blueprint">
+        <TextBox x:Name="JsonInputBox" AcceptsReturn="True" FontFamily="Consolas" FontSize="14" Watermark="Paste or type JSON here..."/>
+        <TabControl Grid.Column="1">
+            <TabControlItem Watermark="Blueprint">
                 <ScrollViewer>
                     <Canvas x:Name="BlueprintCanvas" Background="#222" Height="600"/>
                 </ScrollViewer>
-            </PivotItem>
-            <PivotItem Header="Tree View">
+            </TabItem>
+            <TabControlItem Watermark="Tree View">
                 <TreeView x:Name="JsonTreeView"/>
-            </PivotItem>
-        </Pivot>
+            </TabItem>
+        </TabControl>
     </Grid>
-</Page>
+</UserControl>

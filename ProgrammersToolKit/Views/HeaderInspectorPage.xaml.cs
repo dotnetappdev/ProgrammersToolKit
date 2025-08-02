@@ -1,11 +1,12 @@
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
+using Avalonia.Interactivity;
+using Avalonia.Controls;
+using Avalonia.Controls;
 using System;
 using System.Collections.Generic;
 
 namespace ProgrammersToolKit.Views
 {
-    public sealed partial class HeaderInspectorPage : Page
+    public partial class HeaderInspectorPage : UserControl
     {
         private readonly ProgrammersToolKit.Services.Interfaces.IHeaderInspectorService _service;
 

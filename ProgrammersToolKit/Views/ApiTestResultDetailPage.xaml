@@ -1,6 +1,6 @@
-<Page
+<UserControl
     x:Class="ProgrammersToolKit.Views.ApiTestResultDetailPage"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:ProgrammersToolKit.Views">
     <Grid Margin="10">
@@ -11,16 +11,16 @@
             <TextBlock Text="Headers:" FontWeight="SemiBold" Margin="0,10,0,0"/>
             <TextBox x:Name="HeadersBox" IsReadOnly="True" AcceptsReturn="True" Height="80"/>
             <TextBlock Text="Response Body:" FontWeight="SemiBold" Margin="0,10,0,0"/>
-            <Pivot>
-                <PivotItem Header="Pretty">
+            <TabControl>
+                <TabControlItem Watermark="Pretty">
                     <TextBox x:Name="PrettyBodyBox" IsReadOnly="True" AcceptsReturn="True" Height="200"/>
-                </PivotItem>
-                <PivotItem Header="Raw">
+                </TabItem>
+                <TabControlItem Watermark="Raw">
                     <TextBox x:Name="RawBodyBox" IsReadOnly="True" AcceptsReturn="True" Height="200"/>
-                </PivotItem>
-            </Pivot>
+                </TabItem>
+            </TabControl>
             <TextBlock Text="Error Message:" FontWeight="SemiBold" Margin="0,10,0,0"/>
             <TextBox x:Name="ErrorBox" IsReadOnly="True" AcceptsReturn="True" Height="60"/>
         </StackPanel>
     </Grid>
-</Page>
+</UserControl>

@@ -1,3 +1,6 @@
+using System;
+using System.Threading.Tasks;
+
 namespace ProgrammersToolKit.Core
 {
     public interface IApiTestRunner

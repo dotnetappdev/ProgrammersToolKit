@@ -1,5 +1,5 @@
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
+using Avalonia.Controls;
+using Avalonia.Interactivity;
 using ProgrammersToolKit.Core;
 using ProgrammersToolKit.Services.Interfaces;
 using System;
@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 
 namespace ProgrammersToolKit.Views
 {
-    public sealed partial class ApiTestPage : Page
+    public partial class ApiTestPage : UserControl
     {
         private readonly IApiTestRepository _repo;
         private readonly IApiTestRunner _runner;
         public ApiTestPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
             _repo = (IApiTestRepository)AppHost.ServiceProvider.GetService(typeof(IApiTestRepository));
             _runner = (IApiTestRunner)AppHost.ServiceProvider.GetService(typeof(IApiTestRunner));
             LoadTests();
@@ -56,14 +56,11 @@ namespace ProgrammersToolKit.Views
             if (ApiTestListBox.SelectedItem is ApiTestDefinition test)
             {
                 var result = await _runner.RunTestAsync(test);
-                // Show result in a dialog or navigate to detail page
-                var dialog = new ContentDialog
-                {
-                    Title = $"Result: {(result.Success ? "PASS" : "FAIL")}",
-                    Content = $"Status: {result.StatusCode}\nBody: {result.ResponseBody}",
-                    CloseButtonText = "OK"
-                };
-                await dialog.ShowAsync();
+                // Show result in a simple message for now (could be enhanced with a dialog)
+                // TODO: Create a proper result dialog for Avalonia
+                var resultMessage = $"Result: {(result.Success ? "PASS" : "FAIL")}\nStatus: {result.StatusCode}\nBody: {result.ResponseBody}";
+                // For now just log or show in console, can be enhanced later
+                Console.WriteLine(resultMessage);
             }
         }
     }

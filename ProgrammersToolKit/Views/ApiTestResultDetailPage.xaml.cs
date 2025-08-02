@@ -1,10 +1,11 @@
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
+using Avalonia.Interactivity;
+using Avalonia.Controls;
+using Avalonia.Controls;
 using ProgrammersToolKit.Core;
 
 namespace ProgrammersToolKit.Views
 {
-    public sealed partial class ApiTestResultDetailPage : Page
+    public partial class ApiTestResultDetailPage : UserControl
     {
         public ApiTestResultDetailPage(ApiTestResult result)
         {

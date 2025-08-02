@@ -1,12 +1,13 @@
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
+using Avalonia.Interactivity;
+using Avalonia.Controls;
+using Avalonia.Controls;
 using ProgrammersToolKit.Core;
 using ProgrammersToolKit.Services.Interfaces;
 using System.Collections.Generic;
 
 namespace ProgrammersToolKit.Views
 {
-    public sealed partial class TestResultsPage : Page
+    public partial class TestResultsPage : UserControl
     {
         private readonly IApiTestRepository _repo;
         public TestResultsPage()

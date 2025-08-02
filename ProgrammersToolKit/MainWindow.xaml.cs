@@ -1,60 +1,46 @@
+using Avalonia.Controls;
+using Avalonia.Interactivity;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
 
 namespace ProgrammersToolKit
 {
-    /// <summary>
-    /// An empty window that can be used on its own or navigated to within a Frame.
-    /// </summary>
-    public sealed partial class MainWindow : Window
+    public partial class MainWindow : Window
     {
         public MainWindow()
         {
             InitializeComponent();
-            ContentFrame.Navigate(typeof(Views.ApiTestPage));
+            // Set initial page
+            LoadPage("ApiTestPage");
         }
 
-        private void MainNavView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
+        private void MainNavList_SelectionChanged(object? sender, SelectionChangedEventArgs e)
         {
-            if (args.SelectedItem is NavigationViewItem item)
+            if (e.AddedItems.Count > 0 && e.AddedItems[0] is ListBoxItem item && item.Tag is string tag)
             {
-                switch (item.Tag)
-                {
-                    case "ApiTestPage":
-                        ContentFrame.Navigate(typeof(Views.ApiTestPage));
-                        break;
-                    case "TestResultsPage":
-                        ContentFrame.Navigate(typeof(Views.TestResultsPage));
-                        break;
-                    case "ToolsPage":
-                        ContentFrame.Navigate(typeof(Views.ToolsPage));
-                        break;
-                    case "DiffEditorPage":
-                        ContentFrame.Navigate(typeof(Views.DiffEditorPage));
-                        break;
-                    case "JsonVisualizerPage":
-                        ContentFrame.Navigate(typeof(Views.JsonVisualizerPage));
-                        break;
-                    case "SqlQueryWindow":
-                        ContentFrame.Navigate(typeof(Views.SqlQueryWindow));
-                        break;
-                }
+                LoadPage(tag);
             }
+        }
+
+        private void LoadPage(string pageTag)
+        {
+            UserControl? page = pageTag switch
+            {
+                "ApiTestPage" => new Views.ApiTestPage(),
+                "TestResultsPage" => new Views.TestResultsPage(),
+                "ToolsPage" => new Views.ToolsPage(),
+                "HeaderInspectorPage" => new Views.HeaderInspectorPage(),
+                "EncryptionToolPage" => new Views.EncryptionToolPage(),
+                "HexEditorPage" => new Views.HexEditorPage(),
+                "EncodingDecodingPage" => new Views.EncodingDecodingPage(),
+                "CookieInspectorPage" => new Views.CookieInspectorPage(),
+                "CodeRunnerPage" => new Views.CodeRunnerPage(),
+                "DiffEditorPage" => new Views.DiffEditorPage(),
+                "JsonVisualizerPage" => new Views.JsonVisualizerPage(),
+                "SqlQueryWindow" => new Views.SqlQueryWindow(),
+                _ => new Views.ApiTestPage()
+            };
+
+            ContentFrame.Content = page;
         }
     }
 }

@@ -1,11 +1,12 @@
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
+using Avalonia.Interactivity;
+using Avalonia.Controls;
+using Avalonia.Controls;
 using System.Text.Json;
 using System.Collections.Generic;
 
 namespace ProgrammersToolKit.Views
 {
-    public sealed partial class JsonVisualizerPage : Page
+    public partial class JsonVisualizerPage : UserControl
     {
         public JsonVisualizerPage()
         {

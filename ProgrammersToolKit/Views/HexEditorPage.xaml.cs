@@ -1,10 +1,11 @@
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
+using Avalonia.Interactivity;
+using Avalonia.Controls;
+using Avalonia.Controls;
 using ProgrammersToolKit.Services.Interfaces;
 
 namespace ProgrammersToolKit.Views
 {
-    public sealed partial class HexEditorPage : Page
+    public partial class HexEditorPage : UserControl
     {
         private readonly IHexEditorService _service;
         public HexEditorPage()
