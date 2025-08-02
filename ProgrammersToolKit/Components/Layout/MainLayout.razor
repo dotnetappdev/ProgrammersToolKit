@@ -1,0 +1,54 @@
+@inherits LayoutView
+
+<div class="layout">
+    <div class="sidebar">
+        <div class="app-title">
+            <h1>ProgrammersToolKit</h1>
+        </div>
+        <nav class="nav-menu">
+            <div class="nav-item">
+                <a href="/api-test" class="nav-link">API Tests</a>
+            </div>
+            <div class="nav-item">
+                <a href="/test-results" class="nav-link">Test Results</a>
+            </div>
+            <div class="nav-item">
+                <a href="/tools" class="nav-link">Tools</a>
+            </div>
+            <div class="nav-separator"></div>
+            <div class="nav-item">
+                <a href="/header-inspector" class="nav-link">Header Inspector</a>
+            </div>
+            <div class="nav-item">
+                <a href="/encryption" class="nav-link">Encryption/Decryption</a>
+            </div>
+            <div class="nav-item">
+                <a href="/hex-editor" class="nav-link">Hex Editor</a>
+            </div>
+            <div class="nav-item">
+                <a href="/encoding" class="nav-link">Encoding/Decoding</a>
+            </div>
+            <div class="nav-item">
+                <a href="/cookie-inspector" class="nav-link">Cookie Inspector</a>
+            </div>
+            <div class="nav-item">
+                <a href="/code-runner" class="nav-link">Code Runner</a>
+            </div>
+            <div class="nav-item">
+                <a href="/diff-editor" class="nav-link">Diff Editor</a>
+            </div>
+            <div class="nav-item">
+                <a href="/json-visualizer" class="nav-link">JSON Visualizer</a>
+            </div>
+            <div class="nav-item">
+                <a href="/sql-query" class="nav-link">SQL Query Window</a>
+            </div>
+        </nav>
+        <div class="search-box">
+            <input type="text" placeholder="Search..." class="search-input" />
+        </div>
+    </div>
+    <main class="main-content">
+        @Body
+    </main>
+</div>
