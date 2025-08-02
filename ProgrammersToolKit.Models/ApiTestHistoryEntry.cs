@@ -2,7 +2,7 @@ using System;
 using ProgrammersToolKit.Core;
 using System.Collections.Generic;
 
-namespace ProgrammersToolKit.Core
+namespace ProgrammersToolKit.Models
 {
     public class ApiTestHistoryEntry
     {

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace ProgrammersToolKit.Core
+namespace ProgrammersToolKit.Models
 {
     public class ApiTestGroup
     {

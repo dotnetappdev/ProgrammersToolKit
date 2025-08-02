@@ -46,7 +46,10 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Data2\Data.csproj" />
+    <ProjectReference Include="..\Data\Data.csproj" />
+    <ProjectReference Include="..\ProgrammersToolKit.Models\ProgrammersToolKit.Models.csproj" />
     <ProjectReference Include="..\Services2\Services.csproj" />
+    <ProjectReference Include="..\Services\Services.csproj" />
   </ItemGroup>
 
   <!--

@@ -8,8 +8,8 @@ namespace ProgrammersToolKit.Data
     public class ApplicationDbContext : DbContext
     {
         public DbSet<ApiTestDefinition> ApiTests { get; set; }
-        public DbSet<ProgrammersToolKit.Core.ApiTestHistoryEntry> ApiTestHistory { get; set; }
-        public DbSet<ProgrammersToolKit.Core.ApiTestGroup> ApiTestGroups { get; set; }
+        public DbSet<ApiTestHistoryEntry> ApiTestHistory { get; set; }
+        public DbSet<ApiTestGroup> ApiTestGroups { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
