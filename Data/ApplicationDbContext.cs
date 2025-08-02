@@ -1,0 +1,21 @@
+using Microsoft.EntityFrameworkCore;
+using ProgrammersToolKit.Core;
+
+namespace ProgrammersToolKit.Data
+{
+    public class ApplicationDbContext : DbContext
+    {
+        public DbSet<ApiTestDefinition> ApiTests { get; set; }
+        public DbSet<ProgrammersToolKit.Core.ApiTestHistoryEntry> ApiTestHistory { get; set; }
+        public DbSet<ProgrammersToolKit.Core.ApiTestGroup> ApiTestGroups { get; set; }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            var appData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            var dir = Path.Combine(appData, "ProgrammersToolKit");
+            Directory.CreateDirectory(dir);
+            var dbPath = Path.Combine(dir, "apitests.db");
+            optionsBuilder.UseSqlite($"Data Source={dbPath}");
+        }
+    }
+}

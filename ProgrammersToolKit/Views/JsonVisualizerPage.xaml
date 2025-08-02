@@ -1,0 +1,23 @@
+<Page
+    x:Class="ProgrammersToolKit.Views.JsonVisualizerPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:ProgrammersToolKit.Views">
+    <Grid Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="3*"/>
+        </Grid.ColumnDefinitions>
+        <TextBox x:Name="JsonInputBox" AcceptsReturn="True" FontFamily="Consolas" FontSize="14" PlaceholderText="Paste or type JSON here..."/>
+        <TabControl Grid.Column="1">
+            <TabItem Header="Blueprint">
+                <ScrollViewer>
+                    <Canvas x:Name="BlueprintCanvas" Background="#222" Height="600"/>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem Header="Tree View">
+                <TreeView x:Name="JsonTreeView"/>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Page>

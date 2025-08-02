@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "ProgrammersToolKit (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "ProgrammersToolKit (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}

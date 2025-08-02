@@ -1,0 +1,14 @@
+<Page
+    x:Class="ProgrammersToolKit.Views.HeaderInspectorPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:ProgrammersToolKit.Views">
+    <Grid Margin="10">
+        <StackPanel>
+            <TextBlock Text="Header Inspector" FontWeight="Bold" FontSize="18" Margin="0,0,0,10"/>
+            <TextBox x:Name="HeaderInputBox" Header="Paste Raw Headers Here" AcceptsReturn="True" Height="100"/>
+            <Button Content="Parse Headers" Margin="0,10,0,0"/>
+            <ListView x:Name="ParsedHeadersListView" Height="200"/>
+        </StackPanel>
+    </Grid>
+</Page>

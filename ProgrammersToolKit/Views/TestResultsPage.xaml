@@ -1,0 +1,21 @@
+<Page
+    x:Class="ProgrammersToolKit.Views.TestResultsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:ProgrammersToolKit.Views">
+    <Grid>
+        <StackPanel>
+            <TextBlock Text="Test Results" FontWeight="Bold" FontSize="18" Margin="0,0,0,10"/>
+            <ListView x:Name="TestResultsListView">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Test Name" DisplayMemberBinding="{Binding Name}"/>
+                        <GridViewColumn Header="Status" DisplayMemberBinding="{Binding Success}"/>
+                        <GridViewColumn Header="Date" DisplayMemberBinding="{Binding TestDate}"/>
+                        <GridViewColumn Header="Error" DisplayMemberBinding="{Binding ErrorMessage}"/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </StackPanel>
+    </Grid>
+</Page>
