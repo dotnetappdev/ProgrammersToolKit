@@ -1,0 +1,74 @@
+@page "/api-test"
+
+<PageTitle>API Tests - ProgrammersToolKit</PageTitle>
+
+<div class="card">
+    <h1 class="page-title">API Tests</h1>
+    
+    <div class="form-group">
+        <label class="form-label">HTTP Method:</label>
+        <select class="form-control" @bind="httpMethod" style="width: 150px;">
+            <option value="GET">GET</option>
+            <option value="POST">POST</option>
+            <option value="PUT">PUT</option>
+            <option value="DELETE">DELETE</option>
+            <option value="PATCH">PATCH</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label class="form-label">URL:</label>
+        <input type="text" class="form-control" @bind="url" placeholder="https://api.example.com/endpoint" />
+    </div>
+
+    <div class="form-group">
+        <label class="form-label">Headers:</label>
+        <textarea class="form-control" @bind="headers" placeholder="Content-Type: application/json&#10;Authorization: Bearer token" style="height: 100px;"></textarea>
+    </div>
+
+    <div class="form-group">
+        <label class="form-label">Request Body:</label>
+        <textarea class="form-control" @bind="requestBody" placeholder="JSON request body" style="height: 150px;"></textarea>
+    </div>
+
+    <div class="form-group">
+        <button class="btn btn-primary" @onclick="SendRequest">Send Request</button>
+        <button class="btn btn-secondary" @onclick="ClearForm" style="margin-left: 10px;">Clear</button>
+    </div>
+
+    @if (!string.IsNullOrEmpty(response))
+    {
+        <div class="form-group">
+            <label class="form-label">Response:</label>
+            <textarea class="form-control" readonly @bind="response" style="height: 200px; font-family: 'Courier New', monospace;"></textarea>
+        </div>
+    }
+</div>
+
+@code {
+    private string httpMethod = "GET";
+    private string url = "";
+    private string headers = "";
+    private string requestBody = "";
+    private string response = "";
+
+    private async Task SendRequest()
+    {
+        // Simulate API request
+        response = $"Status: 200 OK\n" +
+                  $"Method: {httpMethod}\n" +
+                  $"URL: {url}\n" +
+                  $"Headers: {headers}\n" +
+                  $"Body: {requestBody}\n\n" +
+                  $"Response Body:\n" +
+                  $"{{\n  \"message\": \"Success\",\n  \"timestamp\": \"{DateTime.Now:yyyy-MM-dd HH:mm:ss}\"\n}}";
+    }
+
+    private void ClearForm()
+    {
+        url = "";
+        headers = "";
+        requestBody = "";
+        response = "";
+    }
+}

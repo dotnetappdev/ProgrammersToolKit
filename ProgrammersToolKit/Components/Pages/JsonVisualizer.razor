@@ -1,0 +1,152 @@
+@page "/json-visualizer"
+@using BlazorMonaco
+@using BlazorMonaco.Editor
+
+<PageTitle>JSON Visualizer - ProgrammersToolKit</PageTitle>
+
+<div class="card">
+    <h1 class="page-title">JSON Visualizer</h1>
+    <p>Format, validate, and visualize JSON data.</p>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; height: 500px;">
+        <div>
+            <label class="form-label">Input JSON:</label>
+            <div style="height: 450px; border: 1px solid #ccc;">
+                <StandaloneCodeEditor @ref="inputEditor" Id="json-input" ConstructionOptions="InputEditorOptions" />
+            </div>
+        </div>
+        
+        <div>
+            <label class="form-label">Formatted JSON:</label>
+            <div style="height: 450px; border: 1px solid #ccc;">
+                <StandaloneCodeEditor @ref="outputEditor" Id="json-output" ConstructionOptions="OutputEditorOptions" />
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group" style="margin-top: 15px;">
+        <button class="btn btn-primary" @onclick="FormatJson">Format JSON</button>
+        <button class="btn btn-secondary" @onclick="ValidateJson" style="margin-left: 10px;">Validate</button>
+        <button class="btn btn-secondary" @onclick="MinifyJson" style="margin-left: 10px;">Minify</button>
+        <button class="btn btn-secondary" @onclick="ClearAll" style="margin-left: 10px;">Clear</button>
+    </div>
+
+    @if (!string.IsNullOrEmpty(validationMessage))
+    {
+        <div class="form-group">
+            <div style="padding: 10px; border-radius: 4px; background-color: @(isValidJson ? "#d4edda" : "#f8d7da"); color: @(isValidJson ? "#155724" : "#721c24");">
+                @validationMessage
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    private StandaloneCodeEditor? inputEditor;
+    private StandaloneCodeEditor? outputEditor;
+    private string validationMessage = "";
+    private bool isValidJson = true;
+
+    private StandaloneEditorConstructionOptions InputEditorOptions(StandaloneCodeEditor editor)
+    {
+        return new StandaloneEditorConstructionOptions
+        {
+            AutomaticLayout = true,
+            Language = "json",
+            Value = "{\n  \"name\": \"John Doe\",\n  \"age\": 30,\n  \"city\": \"New York\"\n}",
+            Theme = "vs",
+            Minimap = new EditorMinimapOptions { Enabled = false },
+            ScrollBeyondLastLine = false,
+            FontSize = 14
+        };
+    }
+
+    private StandaloneEditorConstructionOptions OutputEditorOptions(StandaloneCodeEditor editor)
+    {
+        return new StandaloneEditorConstructionOptions
+        {
+            AutomaticLayout = true,
+            Language = "json",
+            Value = "",
+            Theme = "vs",
+            ReadOnly = true,
+            Minimap = new EditorMinimapOptions { Enabled = false },
+            ScrollBeyondLastLine = false,
+            FontSize = 14
+        };
+    }
+
+    private async Task FormatJson()
+    {
+        if (inputEditor == null || outputEditor == null) return;
+
+        try
+        {
+            var inputJson = await inputEditor.GetValue();
+            var jsonDocument = System.Text.Json.JsonDocument.Parse(inputJson);
+            var formattedJson = System.Text.Json.JsonSerializer.Serialize(jsonDocument, new System.Text.Json.JsonSerializerOptions 
+            { 
+                WriteIndented = true 
+            });
+            
+            await outputEditor.SetValue(formattedJson);
+            validationMessage = "✓ JSON is valid and formatted successfully.";
+            isValidJson = true;
+        }
+        catch (System.Text.Json.JsonException ex)
+        {
+            validationMessage = $"✗ Invalid JSON: {ex.Message}";
+            isValidJson = false;
+            await outputEditor.SetValue("");
+        }
+    }
+
+    private async Task ValidateJson()
+    {
+        if (inputEditor == null) return;
+
+        try
+        {
+            var inputJson = await inputEditor.GetValue();
+            System.Text.Json.JsonDocument.Parse(inputJson);
+            validationMessage = "✓ JSON is valid.";
+            isValidJson = true;
+        }
+        catch (System.Text.Json.JsonException ex)
+        {
+            validationMessage = $"✗ Invalid JSON: {ex.Message}";
+            isValidJson = false;
+        }
+    }
+
+    private async Task MinifyJson()
+    {
+        if (inputEditor == null || outputEditor == null) return;
+
+        try
+        {
+            var inputJson = await inputEditor.GetValue();
+            var jsonDocument = System.Text.Json.JsonDocument.Parse(inputJson);
+            var minifiedJson = System.Text.Json.JsonSerializer.Serialize(jsonDocument);
+            
+            await outputEditor.SetValue(minifiedJson);
+            validationMessage = "✓ JSON is valid and minified successfully.";
+            isValidJson = true;
+        }
+        catch (System.Text.Json.JsonException ex)
+        {
+            validationMessage = $"✗ Invalid JSON: {ex.Message}";
+            isValidJson = false;
+            await outputEditor.SetValue("");
+        }
+    }
+
+    private async Task ClearAll()
+    {
+        if (inputEditor != null)
+            await inputEditor.SetValue("");
+        if (outputEditor != null)
+            await outputEditor.SetValue("");
+        validationMessage = "";
+    }
+}

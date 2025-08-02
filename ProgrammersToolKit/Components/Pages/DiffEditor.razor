@@ -1,0 +1,82 @@
+@page "/diff-editor"
+@using BlazorMonaco
+@using BlazorMonaco.Editor
+
+<PageTitle>Diff Editor - ProgrammersToolKit</PageTitle>
+
+<div class="card">
+    <h1 class="page-title">Diff Editor</h1>
+    <p>Compare text differences side by side using Monaco Diff Editor.</p>
+    
+    <div style="height: 500px; border: 1px solid #ccc;">
+        <StandaloneDiffEditor @ref="diffEditor" Id="diff-editor" ConstructionOptions="DiffEditorConstructionOptions" />
+    </div>
+
+    <div class="form-group" style="margin-top: 15px;">
+        <button class="btn btn-primary" @onclick="CompareTexts">Compare</button>
+        <button class="btn btn-secondary" @onclick="ClearEditor" style="margin-left: 10px;">Clear</button>
+    </div>
+</div>
+
+@code {
+    private StandaloneDiffEditor? diffEditor;
+
+    private StandaloneDiffEditorConstructionOptions DiffEditorConstructionOptions(StandaloneDiffEditor editor)
+    {
+        return new StandaloneDiffEditorConstructionOptions
+        {
+            AutomaticLayout = true,
+            Theme = "vs",
+            ReadOnly = false,
+            OriginalEditable = true,
+            RenderSideBySide = true,
+            IgnoreTrimWhitespace = false,
+            RenderWhitespace = "all",
+            ScrollBeyondLastLine = false,
+            FontSize = 14
+        };
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && diffEditor != null)
+        {
+            // Set initial content for demonstration
+            await SetInitialContent();
+        }
+    }
+
+    private async Task SetInitialContent()
+    {
+        if (diffEditor == null) return;
+
+        var originalContent = "Original text here...\nLine 2\nLine 3\nLine 4";
+        var modifiedContent = "Modified text here...\nLine 2 (changed)\nLine 3\nNew Line 4\nLine 5";
+
+        await diffEditor.SetModel(new DiffEditorModel
+        {
+            Original = await Global.CreateModel(originalContent, "plaintext"),
+            Modified = await Global.CreateModel(modifiedContent, "plaintext")
+        });
+    }
+
+    private async Task CompareTexts()
+    {
+        if (diffEditor == null) return;
+
+        // In a real implementation, you might get the current content
+        // For now, we'll refresh the diff view
+        await diffEditor.Layout();
+    }
+
+    private async Task ClearEditor()
+    {
+        if (diffEditor == null) return;
+
+        await diffEditor.SetModel(new DiffEditorModel
+        {
+            Original = await Global.CreateModel("", "plaintext"),
+            Modified = await Global.CreateModel("", "plaintext")
+        });
+    }
+}
