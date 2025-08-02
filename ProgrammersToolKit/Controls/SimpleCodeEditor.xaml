@@ -1,6 +1,6 @@
 <UserControl
     x:Class="ProgrammersToolKit.Controls.SimpleCodeEditor"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:ProgrammersToolKit.Controls">
     <Grid>
@@ -18,7 +18,7 @@
             <StackPanel x:Name="LineNumbersPanel"/>
         </ScrollViewer>
         <!-- Code editor -->
-        <RichEditBox x:Name="EditorBox" Grid.Column="1" Grid.Row="0" AcceptsReturn="True" FontFamily="Consolas" FontSize="14" TextChanged="EditorBox_TextChanged"/>
+        <TextBox x:Name="EditorBox" Grid.Column="1" Grid.Row="0" AcceptsReturn="True" FontFamily="Consolas" FontSize="14" TextChanged="EditorBox_TextChanged"/>
         <!-- Terminal/Debug window -->
         <Grid Grid.Row="1" Grid.ColumnSpan="2" Background="#1e1e1e">
             <Grid.RowDefinitions>
@@ -29,7 +29,7 @@
                 <TextBlock x:Name="TerminalOutputBlock" FontFamily="Consolas" FontSize="13" Foreground="White" TextWrapping="Wrap"/>
             </ScrollViewer>
             <StackPanel Orientation="Horizontal" Grid.Row="1" Background="#222">
-                <TextBox x:Name="TerminalInputBox" Width="Auto" MinWidth="60" Margin="2,2,0,2" FontFamily="Consolas" FontSize="13" KeyDown="TerminalInputBox_KeyDown"/>
+                <TextBox x:Name="TerminalInputBox" Width="200" MinWidth="60" Margin="2,2,0,2" FontFamily="Consolas" FontSize="13" KeyDown="TerminalInputBox_KeyDown"/>
                 <Button Content="Send" Margin="4,2,0,2" Click="TerminalSendButton_Click"/>
                 <Button Content="Copy All" Margin="4,2,2,2" Click="TerminalCopyAllButton_Click"/>
             </StackPanel>

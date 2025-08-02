@@ -1,11 +1,13 @@
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Documents;
-using Microsoft.UI.Xaml;
+using Avalonia.Controls;
+using Avalonia.Interactivity;
+using Avalonia.Input;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+
 namespace ProgrammersToolKit.Controls
 {
-    public sealed partial class SimpleCodeEditor : UserControl
+    public partial class SimpleCodeEditor : UserControl
     {
         private readonly List<string> _terminalHistory = new List<string>();
         private int _historyIndex = -1;
@@ -62,14 +64,14 @@ namespace ProgrammersToolKit.Controls
         }
 
         // Handle Enter key and Up/Down for history in terminal input
-        private void TerminalInputBox_KeyDown(object sender, Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
+        private void TerminalInputBox_KeyDown(object sender, Avalonia.Input.KeyEventArgs e)
         {
-            if (e.Key == Windows.System.VirtualKey.Enter)
+            if (e.Key == Avalonia.Input.Key.Enter)
             {
                 HandleTerminalCommand();
                 e.Handled = true;
             }
-            else if (e.Key == Windows.System.VirtualKey.Up)
+            else if (e.Key == Avalonia.Input.Key.Up)
             {
                 if (_terminalHistory.Count > 0 && _historyIndex < _terminalHistory.Count - 1)
                 {
@@ -79,7 +81,7 @@ namespace ProgrammersToolKit.Controls
                 }
                 e.Handled = true;
             }
-            else if (e.Key == Windows.System.VirtualKey.Down)
+            else if (e.Key == Avalonia.Input.Key.Down)
             {
                 if (_historyIndex > 0)
                 {
@@ -194,14 +196,17 @@ namespace ProgrammersToolKit.Controls
 
         private void UpdateLineNumbers()
         {
-            EditorBox.Document.GetText(Windows.UI.Text.TextGetOptions.None, out var text);
+            // TODO: Implement for Avalonia - temporarily disabled to get basic build working
+            /*
+            var text = EditorBox.Text ?? "";
             var lines = text.Split('\n');
             LineNumbersPanel.Children.Clear();
             for (int i = 1; i <= lines.Length; i++)
             {
-                var tb = new TextBlock { Text = i.ToString(), FontFamily = new Windows.UI.Xaml.Media.FontFamily("Consolas"), FontSize = 14, Margin = new Thickness(0, 0, 0, 0) };
+                var tb = new TextBlock { Text = i.ToString(), FontFamily = "Consolas", FontSize = 14 };
                 LineNumbersPanel.Children.Add(tb);
             }
+            */
         }
     }
 }
