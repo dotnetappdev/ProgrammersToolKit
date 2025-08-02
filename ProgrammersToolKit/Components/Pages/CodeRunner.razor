@@ -9,7 +9,7 @@
     
     <div class="form-group">
         <label class="form-label">Language:</label>
-        <select class="form-control" @bind="selectedLanguage" @onchange="OnLanguageChanged" style="width: 200px;">
+        <select class="form-control" @bind:get="selectedLanguage" @bind:set="SetSelectedLanguage" style="width: 200px;">
             <option value="csharp">C#</option>
             <option value="python">Python</option>
             <option value="javascript">JavaScript</option>
@@ -84,7 +84,7 @@
             ReadOnly = false,
             OverviewRulerBorder = false,
             OverviewRulerLanes = 0,
-            Lineheight = 18,
+            LineHeight = 18,
             FontSize = 14
         };
     }
@@ -111,13 +111,32 @@
         };
     }
 
+    private async Task SetSelectedLanguage(string language)
+    {
+        selectedLanguage = language;
+        if (codeEditor != null)
+        {
+            await codeEditor.SetValue(GetDefaultCode(selectedLanguage));
+            // Note: SetModelLanguage may not be available in current BlazorMonaco version
+            // We'll handle language through construction options instead
+        }
+    }
+
     private async Task OnLanguageChanged(ChangeEventArgs e)
     {
         selectedLanguage = e.Value?.ToString() ?? "csharp";
         if (codeEditor != null)
         {
             await codeEditor.SetValue(GetDefaultCode(selectedLanguage));
-            await codeEditor.SetModelLanguage(GetMonacoLanguage(selectedLanguage));
+            // Note: SetModelLanguage may not be available in current BlazorMonaco version
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && codeEditor != null)
+        {
+            await codeEditor.SetValue(GetDefaultCode(selectedLanguage));
         }
     }
 

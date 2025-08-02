@@ -1,4 +1,11 @@
 using ProgrammersToolKit.Core;
+using ProgrammersToolKit.Data.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace ProgrammersToolKit.Services
 {
@@ -36,7 +43,7 @@ namespace ProgrammersToolKit.Services
 
                 var response = await client.SendAsync(request);
                 result.StatusCode = (int)response.StatusCode;
-                result.ResponseHeaders = string.Join("\n", response.Headers.Select(h => $"{h.Key}: {string.Join(", ", h.Value)}"));
+                result.ResponseHeaders = response.Headers.ToDictionary(h => h.Key, h => string.Join(", ", h.Value));
                 result.ResponseBody = await response.Content.ReadAsStringAsync();
                 result.Success = response.IsSuccessStatusCode;
 

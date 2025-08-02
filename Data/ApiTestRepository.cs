@@ -1,8 +1,9 @@
 
+using ProgrammersToolKit.Core;
+using ProgrammersToolKit.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using ProgrammersToolKit.Core;
 
 namespace ProgrammersToolKit.Data
 {

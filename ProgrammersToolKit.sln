@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services", "Services\Servic
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProgrammersToolKit.Models", "ProgrammersToolKit.Models\ProgrammersToolKit.Models.csproj", "{BB5D0105-CDDD-4F23-98D4-AE2902431B8F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", "{C4B2E3F1-B9A8-4D2E-8F5A-1234567890AB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -65,6 +67,18 @@ Global
 		{BB5D0105-CDDD-4F23-98D4-AE2902431B8F}.Release|x64.Build.0 = Release|Any CPU
 		{BB5D0105-CDDD-4F23-98D4-AE2902431B8F}.Release|x86.ActiveCfg = Release|Any CPU
 		{BB5D0105-CDDD-4F23-98D4-AE2902431B8F}.Release|x86.Build.0 = Release|Any CPU
+		{C4B2E3F1-B9A8-4D2E-8F5A-1234567890AB}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{C4B2E3F1-B9A8-4D2E-8F5A-1234567890AB}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{C4B2E3F1-B9A8-4D2E-8F5A-1234567890AB}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C4B2E3F1-B9A8-4D2E-8F5A-1234567890AB}.Debug|x64.Build.0 = Debug|Any CPU
+		{C4B2E3F1-B9A8-4D2E-8F5A-1234567890AB}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C4B2E3F1-B9A8-4D2E-8F5A-1234567890AB}.Debug|x86.Build.0 = Debug|Any CPU
+		{C4B2E3F1-B9A8-4D2E-8F5A-1234567890AB}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{C4B2E3F1-B9A8-4D2E-8F5A-1234567890AB}.Release|ARM64.Build.0 = Release|Any CPU
+		{C4B2E3F1-B9A8-4D2E-8F5A-1234567890AB}.Release|x64.ActiveCfg = Release|Any CPU
+		{C4B2E3F1-B9A8-4D2E-8F5A-1234567890AB}.Release|x64.Build.0 = Release|Any CPU
+		{C4B2E3F1-B9A8-4D2E-8F5A-1234567890AB}.Release|x86.ActiveCfg = Release|Any CPU
+		{C4B2E3F1-B9A8-4D2E-8F5A-1234567890AB}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

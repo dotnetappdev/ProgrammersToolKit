@@ -2,7 +2,9 @@ using Microsoft.AspNetCore.Components.WebView.Maui;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using ProgrammersToolKit.Data;
+using ProgrammersToolKit.Data.Interfaces;
 using ProgrammersToolKit.Services;
+using ProgrammersToolKit.Services.Interfaces;
 
 namespace ProgrammersToolKit;
 
@@ -22,7 +24,6 @@ public static class MauiProgram
 
 #if DEBUG
         builder.Services.AddBlazorWebViewDeveloperTools();
-        builder.Logging.AddDebug();
 #endif
 
         // Register Entity Framework
