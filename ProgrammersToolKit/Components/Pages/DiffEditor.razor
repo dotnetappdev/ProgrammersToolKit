@@ -1,6 +1,7 @@
 @page "/diff-editor"
 @using BlazorMonaco
 @using BlazorMonaco.Editor
+@inject IJSRuntime JSRuntime
 
 <PageTitle>Diff Editor - ProgrammersToolKit</PageTitle>
 
@@ -55,8 +56,8 @@
 
         await diffEditor.SetModel(new DiffEditorModel
         {
-            Original = await Global.CreateModel(originalContent, "plaintext"),
-            Modified = await Global.CreateModel(modifiedContent, "plaintext")
+            Original = await Global.CreateModel(JSRuntime, originalContent, "plaintext"),
+            Modified = await Global.CreateModel(JSRuntime, modifiedContent, "plaintext")
         });
     }
 
@@ -75,8 +76,8 @@
 
         await diffEditor.SetModel(new DiffEditorModel
         {
-            Original = await Global.CreateModel("", "plaintext"),
-            Modified = await Global.CreateModel("", "plaintext")
+            Original = await Global.CreateModel(JSRuntime, "", "plaintext"),
+            Modified = await Global.CreateModel(JSRuntime, "", "plaintext")
         });
     }
 }
