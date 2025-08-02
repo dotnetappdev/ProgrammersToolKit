@@ -1,12 +1,165 @@
 @page "/encoding"
+@using ProgrammersToolKit.Services.Interfaces
+@inject IEncodingDecodingService EncodingService
 
 <PageTitle>Encoding/Decoding - ProgrammersToolKit</PageTitle>
 
 <div class="card">
     <h1 class="page-title">Encoding/Decoding</h1>
-    <p>Text encoding and decoding utilities.</p>
+    <p>Text encoding and decoding utilities supporting Base64, URL encoding, and Hexadecimal.</p>
     
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="form-label">Input Text:</label>
+                <textarea class="form-control" @bind="inputText" rows="6" placeholder="Enter text to encode/decode..."></textarea>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="form-label">Output:</label>
+                <textarea class="form-control" readonly rows="6" style="background-color: #f8f9fa;">@outputText</textarea>
+            </div>
+        </div>
+    </div>
+
     <div class="form-group">
-        <p><em>This page will provide text encoding/decoding tools. Implementation pending.</em></p>
+        <label class="form-label">Encoding Type:</label>
+        <select class="form-control" @bind="selectedEncoding" style="width: 200px;">
+            <option value="base64">Base64</option>
+            <option value="url">URL Encoding</option>
+            <option value="hex">Hexadecimal</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <button class="btn btn-primary me-2" @onclick="EncodeText">Encode</button>
+        <button class="btn btn-secondary me-2" @onclick="DecodeText">Decode</button>
+        <button class="btn btn-outline-danger" @onclick="ClearText">Clear</button>
+    </div>
+
+    @if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <div class="alert alert-danger" role="alert">
+            @errorMessage
+        </div>
+    }
+
+    <div class="mt-4">
+        <h5>Quick Examples:</h5>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card p-3">
+                    <h6>Base64</h6>
+                    <small class="text-muted">
+                        <strong>Input:</strong> Hello World<br/>
+                        <strong>Encoded:</strong> SGVsbG8gV29ybGQ=
+                    </small>
+                    <button class="btn btn-sm btn-outline-primary mt-2" @onclick="LoadBase64Example">
+                        Try Example
+                    </button>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card p-3">
+                    <h6>URL Encoding</h6>
+                    <small class="text-muted">
+                        <strong>Input:</strong> hello world!<br/>
+                        <strong>Encoded:</strong> hello%20world%21
+                    </small>
+                    <button class="btn btn-sm btn-outline-primary mt-2" @onclick="LoadUrlExample">
+                        Try Example
+                    </button>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card p-3">
+                    <h6>Hexadecimal</h6>
+                    <small class="text-muted">
+                        <strong>Input:</strong> ABC<br/>
+                        <strong>Encoded:</strong> 414243
+                    </small>
+                    <button class="btn btn-sm btn-outline-primary mt-2" @onclick="LoadHexExample">
+                        Try Example
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+
+@code {
+    private string inputText = "";
+    private string outputText = "";
+    private string selectedEncoding = "base64";
+    private string errorMessage = "";
+
+    private void EncodeText()
+    {
+        try
+        {
+            errorMessage = "";
+            if (string.IsNullOrEmpty(inputText))
+            {
+                outputText = "";
+                return;
+            }
+
+            outputText = EncodingService.Encode(inputText, selectedEncoding);
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Encoding error: {ex.Message}";
+            outputText = "";
+        }
+    }
+
+    private void DecodeText()
+    {
+        try
+        {
+            errorMessage = "";
+            if (string.IsNullOrEmpty(inputText))
+            {
+                outputText = "";
+                return;
+            }
+
+            outputText = EncodingService.Decode(inputText, selectedEncoding);
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Decoding error: {ex.Message}. Please check that the input is valid {selectedEncoding} encoded text.";
+            outputText = "";
+        }
+    }
+
+    private void ClearText()
+    {
+        inputText = "";
+        outputText = "";
+        errorMessage = "";
+    }
+
+    private void LoadExample(string text, string encoding)
+    {
+        inputText = text;
+        selectedEncoding = encoding;
+        EncodeText();
+    }
+
+    private void LoadBase64Example()
+    {
+        LoadExample("Hello World", "base64");
+    }
+
+    private void LoadUrlExample()
+    {
+        LoadExample("hello world!", "url");
+    }
+
+    private void LoadHexExample()
+    {
+        LoadExample("ABC", "hex");
+    }
+}
