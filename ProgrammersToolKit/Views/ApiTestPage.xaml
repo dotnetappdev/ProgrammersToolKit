@@ -26,17 +26,17 @@
             <Expander Header="Headers" IsExpanded="False" Margin="0,5,0,0">
                 <TextBox x:Name="TestHeadersBox" AcceptsReturn="True" Height="60" PlaceholderText="Key: Value\nKey2: Value2"/>
             </Expander>
-            <TabControl Margin="0,5,0,0">
-                <TabItem Header="Raw">
+            <Pivot Margin="0,5,0,0">
+                <PivotItem Header="Raw">
                     <TextBox x:Name="TestBodyBox" AcceptsReturn="True" Height="80" PlaceholderText="Paste raw body here (JSON, XML, etc.)"/>
-                </TabItem>
-                <TabItem Header="JSON">
+                </PivotItem>
+                <PivotItem Header="JSON">
                     <TextBox x:Name="TestBodyJsonBox" AcceptsReturn="True" Height="80" PlaceholderText="Paste JSON body here..."/>
-                </TabItem>
-                <TabItem Header="XML">
+                </PivotItem>
+                <PivotItem Header="XML">
                     <TextBox x:Name="TestBodyXmlBox" AcceptsReturn="True" Height="80" PlaceholderText="Paste XML body here..."/>
-                </TabItem>
-            </TabControl>
+                </PivotItem>
+            </Pivot>
             <ComboBox x:Name="TestBodyTypeBox" Header="Body Type">
                 <ComboBoxItem Content="Raw"/>
                 <ComboBoxItem Content="JSON"/>

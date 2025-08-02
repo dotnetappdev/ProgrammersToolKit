@@ -1,5 +1,6 @@
 
 using Microsoft.Extensions.DependencyInjection;
+using ProgrammersToolKit.Core;
 using ProgrammersToolKit.Data;
 using ProgrammersToolKit.Services;
 
@@ -15,10 +16,10 @@ namespace ProgrammersToolKit
             services.AddDbContext<ApplicationDbContext>();
             services.AddScoped<IApiTestRepository, ApiTestRepository>();
             services.AddScoped<IApiTestRunner, ApiTestRunner>();
-            services.AddScoped<ProgrammersToolKit.Services.Interfaces.IEncodingDecodingService, EncodingDecodingService>();
-            services.AddScoped<ProgrammersToolKit.Services.Interfaces.ICodeRunnerService, CodeRunnerService>();
-            services.AddScoped<ProgrammersToolKit.Services.Interfaces.ICookieInspectorService, CookieInspectorService>();
-            services.AddScoped<ProgrammersToolKit.Services.Interfaces.IHexEditorService, HexEditorService>();
+            services.AddScoped<Interfaces.IEncodingDecodingService, EncodingDecodingService>();
+            services.AddScoped<ICodeRunnerService, CodeRunnerService>();
+            services.AddScoped<ICookieInspectorService, CookieInspectorService>();
+            services.AddScoped<IHexEditorService, HexEditorService>();
             services.AddScoped<ProgrammersToolKit.Services.Interfaces.IEncryptionToolService, EncryptionToolService>();
             services.AddScoped<ProgrammersToolKit.Services.Interfaces.IHeaderInspectorService, HeaderInspectorService>();
             ServiceProvider = services.BuildServiceProvider();

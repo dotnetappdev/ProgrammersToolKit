@@ -7,14 +7,16 @@
         <StackPanel>
             <TextBlock Text="Test Results" FontWeight="Bold" FontSize="18" Margin="0,0,0,10"/>
             <ListView x:Name="TestResultsListView">
-                <ListView.View>
-                    <GridView>
-                        <GridViewColumn Header="Test Name" DisplayMemberBinding="{Binding Name}"/>
-                        <GridViewColumn Header="Status" DisplayMemberBinding="{Binding Success}"/>
-                        <GridViewColumn Header="Date" DisplayMemberBinding="{Binding TestDate}"/>
-                        <GridViewColumn Header="Error" DisplayMemberBinding="{Binding ErrorMessage}"/>
-                    </GridView>
-                </ListView.View>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal" Spacing="16">
+                            <TextBlock Text="{Binding Name}" Width="160"/>
+                            <TextBlock Text="{Binding Success}" Width="80"/>
+                            <TextBlock Text="{Binding TestDate}" Width="120"/>
+                            <TextBlock Text="{Binding ErrorMessage}" Width="200"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
             </ListView>
         </StackPanel>
     </Grid>

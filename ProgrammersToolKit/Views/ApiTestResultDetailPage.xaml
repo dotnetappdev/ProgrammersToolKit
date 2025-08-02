@@ -11,14 +11,14 @@
             <TextBlock Text="Headers:" FontWeight="SemiBold" Margin="0,10,0,0"/>
             <TextBox x:Name="HeadersBox" IsReadOnly="True" AcceptsReturn="True" Height="80"/>
             <TextBlock Text="Response Body:" FontWeight="SemiBold" Margin="0,10,0,0"/>
-            <TabControl>
-                <TabItem Header="Pretty">
+            <Pivot>
+                <PivotItem Header="Pretty">
                     <TextBox x:Name="PrettyBodyBox" IsReadOnly="True" AcceptsReturn="True" Height="200"/>
-                </TabItem>
-                <TabItem Header="Raw">
+                </PivotItem>
+                <PivotItem Header="Raw">
                     <TextBox x:Name="RawBodyBox" IsReadOnly="True" AcceptsReturn="True" Height="200"/>
-                </TabItem>
-            </TabControl>
+                </PivotItem>
+            </Pivot>
             <TextBlock Text="Error Message:" FontWeight="SemiBold" Margin="0,10,0,0"/>
             <TextBox x:Name="ErrorBox" IsReadOnly="True" AcceptsReturn="True" Height="60"/>
         </StackPanel>

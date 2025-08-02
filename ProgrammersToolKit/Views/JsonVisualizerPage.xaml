@@ -9,15 +9,15 @@
             <ColumnDefinition Width="3*"/>
         </Grid.ColumnDefinitions>
         <TextBox x:Name="JsonInputBox" AcceptsReturn="True" FontFamily="Consolas" FontSize="14" PlaceholderText="Paste or type JSON here..."/>
-        <TabControl Grid.Column="1">
-            <TabItem Header="Blueprint">
+        <Pivot Grid.Column="1">
+            <PivotItem Header="Blueprint">
                 <ScrollViewer>
                     <Canvas x:Name="BlueprintCanvas" Background="#222" Height="600"/>
                 </ScrollViewer>
-            </TabItem>
-            <TabItem Header="Tree View">
+            </PivotItem>
+            <PivotItem Header="Tree View">
                 <TreeView x:Name="JsonTreeView"/>
-            </TabItem>
-        </TabControl>
+            </PivotItem>
+        </Pivot>
     </Grid>
 </Page>
