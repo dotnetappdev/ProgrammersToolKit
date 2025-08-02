@@ -1,12 +1,231 @@
 @page "/encryption"
+@using ProgrammersToolKit.Services.Interfaces
+@inject IEncryptionToolService EncryptionService
 
 <PageTitle>Encryption/Decryption - ProgrammersToolKit</PageTitle>
 
 <div class="card">
     <h1 class="page-title">Encryption/Decryption</h1>
-    <p>Secure data processing tools for encryption and decryption.</p>
+    <p>Secure data processing tools for encryption and decryption using AES, DES, and Base64.</p>
     
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="form-label">Input Text:</label>
+                <textarea class="form-control" @bind="inputText" rows="6" placeholder="Enter text to encrypt/decrypt..."></textarea>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="form-label">Output:</label>
+                <textarea class="form-control" readonly rows="6" style="background-color: #f8f9fa;">@outputText</textarea>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="form-label">Algorithm:</label>
+                <select class="form-control" @bind="selectedAlgorithm">
+                    <option value="base64">Base64 (Encoding only)</option>
+                    <option value="aes">AES (Advanced Encryption Standard)</option>
+                    <option value="des">DES (Data Encryption Standard)</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="form-label">
+                    Encryption Key:
+                    @if (selectedAlgorithm != "base64")
+                    {
+                        <span class="text-danger">*</span>
+                    }
+                </label>
+                <input type="password" class="form-control" @bind="encryptionKey" 
+                       placeholder="@GetKeyPlaceholder()" 
+                       disabled="@(selectedAlgorithm == "base64")" />
+                @if (selectedAlgorithm != "base64")
+                {
+                    <small class="text-muted">@GetKeyInfo()</small>
+                }
+            </div>
+        </div>
+    </div>
+
     <div class="form-group">
-        <p><em>This page will provide encryption and decryption utilities. Implementation pending.</em></p>
+        <button class="btn btn-primary me-2" @onclick="EncryptText">Encrypt</button>
+        <button class="btn btn-secondary me-2" @onclick="DecryptText">Decrypt</button>
+        <button class="btn btn-outline-warning me-2" @onclick="GenerateRandomKey">Generate Random Key</button>
+        <button class="btn btn-outline-danger" @onclick="ClearAll">Clear All</button>
+    </div>
+
+    @if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <div class="alert alert-danger" role="alert">
+            @errorMessage
+        </div>
+    }
+
+    @if (!string.IsNullOrEmpty(warningMessage))
+    {
+        <div class="alert alert-warning" role="alert">
+            @warningMessage
+        </div>
+    }
+
+    <div class="mt-4">
+        <h5>Algorithm Information:</h5>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card p-3">
+                    <h6>Base64</h6>
+                    <small class="text-muted">
+                        Simple encoding (not encryption).<br/>
+                        No key required.<br/>
+                        Easily reversible.
+                    </small>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card p-3">
+                    <h6>AES</h6>
+                    <small class="text-muted">
+                        Strong symmetric encryption.<br/>
+                        256-bit key (32 characters).<br/>
+                        Industry standard.
+                    </small>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card p-3">
+                    <h6>DES</h6>
+                    <small class="text-muted">
+                        Legacy symmetric encryption.<br/>
+                        64-bit key (8 characters).<br/>
+                        Less secure than AES.
+                    </small>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+
+@code {
+    private string inputText = "";
+    private string outputText = "";
+    private string selectedAlgorithm = "base64";
+    private string encryptionKey = "";
+    private string errorMessage = "";
+    private string warningMessage = "";
+
+    private void EncryptText()
+    {
+        try
+        {
+            errorMessage = "";
+            warningMessage = "";
+            
+            if (string.IsNullOrEmpty(inputText))
+            {
+                outputText = "";
+                return;
+            }
+
+            if (selectedAlgorithm != "base64" && string.IsNullOrEmpty(encryptionKey))
+            {
+                errorMessage = "Encryption key is required for this algorithm.";
+                return;
+            }
+
+            outputText = EncryptionService.Encrypt(inputText, encryptionKey, selectedAlgorithm);
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Encryption error: {ex.Message}";
+            outputText = "";
+        }
+    }
+
+    private void DecryptText()
+    {
+        try
+        {
+            errorMessage = "";
+            warningMessage = "";
+            
+            if (string.IsNullOrEmpty(inputText))
+            {
+                outputText = "";
+                return;
+            }
+
+            if (selectedAlgorithm != "base64" && string.IsNullOrEmpty(encryptionKey))
+            {
+                errorMessage = "Encryption key is required for this algorithm.";
+                return;
+            }
+
+            outputText = EncryptionService.Decrypt(inputText, encryptionKey, selectedAlgorithm);
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Decryption error: {ex.Message}. Please check that the input is valid encrypted text and the key is correct.";
+            outputText = "";
+        }
+    }
+
+    private void GenerateRandomKey()
+    {
+        var random = new Random();
+        var keyLength = selectedAlgorithm switch
+        {
+            "aes" => 32,
+            "des" => 8,
+            _ => 16
+        };
+
+        const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        encryptionKey = new string(Enumerable.Repeat(chars, keyLength)
+            .Select(s => s[random.Next(s.Length)]).ToArray());
+
+        warningMessage = "Random key generated. Save this key securely if you need to decrypt data later!";
+    }
+
+    private void ClearAll()
+    {
+        inputText = "";
+        outputText = "";
+        encryptionKey = "";
+        errorMessage = "";
+        warningMessage = "";
+    }
+
+    private void OnAlgorithmChanged()
+    {
+        encryptionKey = "";
+        errorMessage = "";
+        warningMessage = "";
+    }
+
+    private string GetKeyPlaceholder()
+    {
+        return selectedAlgorithm switch
+        {
+            "aes" => "Enter 32-character key for AES",
+            "des" => "Enter 8-character key for DES",
+            _ => "No key required"
+        };
+    }
+
+    private string GetKeyInfo()
+    {
+        return selectedAlgorithm switch
+        {
+            "aes" => "AES requires exactly 32 characters. Key will be padded or truncated.",
+            "des" => "DES requires exactly 8 characters. Key will be padded or truncated.",
+            _ => ""
+        };
+    }
+}

@@ -1,12 +1,284 @@
 @page "/hex-editor"
+@using ProgrammersToolKit.Services.Interfaces
+@inject IHexEditorService HexEditorService
 
 <PageTitle>Hex Editor - ProgrammersToolKit</PageTitle>
 
 <div class="card">
     <h1 class="page-title">Hex Editor</h1>
-    <p>Binary data editing and visualization.</p>
+    <p>Binary data editing and visualization. Convert between text and hexadecimal representation.</p>
     
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="form-label">Text Input:</label>
+                <textarea class="form-control" @bind="textInput" @oninput="OnTextChanged" rows="8" placeholder="Enter text to convert to hex..."></textarea>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="form-label">Hex Output:</label>
+                <textarea class="form-control" @bind="hexOutput" @oninput="OnHexChanged" rows="8" placeholder="Enter hex to convert to text..." style="font-family: 'Courier New', monospace;"></textarea>
+            </div>
+        </div>
+    </div>
+
     <div class="form-group">
-        <p><em>This page will provide hex editing capabilities. Implementation pending.</em></p>
+        <button class="btn btn-primary me-2" @onclick="ConvertTextToHex">Text → Hex</button>
+        <button class="btn btn-secondary me-2" @onclick="ConvertHexToText">Hex → Text</button>
+        <button class="btn btn-outline-danger" @onclick="ClearAll">Clear All</button>
+    </div>
+
+    @if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <div class="alert alert-danger" role="alert">
+            @errorMessage
+        </div>
+    }
+
+    <div class="mt-4">
+        <h5>Hex Viewer:</h5>
+        <div class="hex-viewer">
+            @if (!string.IsNullOrEmpty(hexFormatted))
+            {
+                <pre style="background-color: #f8f9fa; padding: 10px; border-radius: 5px; font-family: 'Courier New', monospace; font-size: 12px; overflow-x: auto;">@((MarkupString)hexFormatted)</pre>
+            }
+            else
+            {
+                <div class="text-muted p-3 text-center" style="border: 1px dashed #ccc; border-radius: 5px;">
+                    No data to display. Enter text or hex above to see formatted output.
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <h5>File Operations:</h5>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-label">Load Sample Data:</label>
+                    <div class="btn-group-vertical d-grid gap-2">
+                        <button class="btn btn-outline-info" @onclick="LoadAsciiSample">Load ASCII Sample</button>
+                        <button class="btn btn-outline-info" @onclick="LoadUtf8Sample">Load UTF-8 Sample</button>
+                        <button class="btn btn-outline-info" @onclick="LoadBinarySample">Load Binary Sample</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-label">Data Info:</label>
+                    <div class="card p-3">
+                        <small>
+                            <strong>Text Length:</strong> @textInput.Length characters<br/>
+                            <strong>Hex Length:</strong> @(hexOutput.Length / 2) bytes<br/>
+                            <strong>Encoding:</strong> UTF-8
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <h5>Quick Reference:</h5>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card p-3">
+                    <h6>Common ASCII</h6>
+                    <small class="text-muted" style="font-family: 'Courier New', monospace;">
+                        Space: 20<br/>
+                        '0': 30, '9': 39<br/>
+                        'A': 41, 'Z': 5A<br/>
+                        'a': 61, 'z': 7A<br/>
+                        LF: 0A, CR: 0D
+                    </small>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card p-3">
+                    <h6>Special Characters</h6>
+                    <small class="text-muted" style="font-family: 'Courier New', monospace;">
+                        NULL: 00<br/>
+                        TAB: 09<br/>
+                        ESC: 1B<br/>
+                        DEL: 7F
+                    </small>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card p-3">
+                    <h6>Tips</h6>
+                    <small class="text-muted">
+                        • Each byte = 2 hex digits<br/>
+                        • UTF-8 uses 1-4 bytes per character<br/>
+                        • ASCII uses 1 byte per character<br/>
+                        • Spaces in hex input are ignored
+                    </small>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+
+@code {
+    private string textInput = "";
+    private string hexOutput = "";
+    private string hexFormatted = "";
+    private string errorMessage = "";
+
+    private void OnTextChanged(ChangeEventArgs e)
+    {
+        textInput = e.Value?.ToString() ?? "";
+        ConvertTextToHex();
+    }
+
+    private void OnHexChanged(ChangeEventArgs e)
+    {
+        hexOutput = e.Value?.ToString() ?? "";
+        // Don't auto-convert hex to text as it might be partial input
+    }
+
+    private void ConvertTextToHex()
+    {
+        try
+        {
+            errorMessage = "";
+            if (string.IsNullOrEmpty(textInput))
+            {
+                hexOutput = "";
+                hexFormatted = "";
+                return;
+            }
+
+            hexOutput = HexEditorService.TextToHex(textInput);
+            UpdateFormattedHex();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error converting text to hex: {ex.Message}";
+        }
+    }
+
+    private void ConvertHexToText()
+    {
+        try
+        {
+            errorMessage = "";
+            if (string.IsNullOrEmpty(hexOutput))
+            {
+                textInput = "";
+                hexFormatted = "";
+                return;
+            }
+
+            // Clean hex input (remove spaces, validate)
+            var cleanHex = hexOutput.Replace(" ", "").Replace("-", "").Replace(":", "");
+            
+            if (cleanHex.Length % 2 != 0)
+            {
+                errorMessage = "Hex string must have an even number of characters.";
+                return;
+            }
+
+            if (!System.Text.RegularExpressions.Regex.IsMatch(cleanHex, "^[0-9A-Fa-f]*$"))
+            {
+                errorMessage = "Invalid hex characters. Only 0-9, A-F are allowed.";
+                return;
+            }
+
+            textInput = HexEditorService.HexToText(cleanHex);
+            hexOutput = cleanHex; // Store cleaned version
+            UpdateFormattedHex();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error converting hex to text: {ex.Message}";
+        }
+    }
+
+    private void UpdateFormattedHex()
+    {
+        if (string.IsNullOrEmpty(hexOutput))
+        {
+            hexFormatted = "";
+            return;
+        }
+
+        var hex = hexOutput.ToUpper();
+        var formatted = new System.Text.StringBuilder();
+        var address = 0;
+
+        for (int i = 0; i < hex.Length; i += 32) // 16 bytes per line
+        {
+            var line = hex.Substring(i, Math.Min(32, hex.Length - i));
+            
+            // Add address
+            formatted.Append($"{address:X8}: ");
+
+            // Add hex bytes with spacing
+            for (int j = 0; j < line.Length; j += 2)
+            {
+                if (j + 1 < line.Length)
+                {
+                    formatted.Append($"{line.Substring(j, 2)} ");
+                }
+                else
+                {
+                    formatted.Append($"{line.Substring(j, 1)}  ");
+                }
+
+                if (j == 14) formatted.Append(" "); // Extra space in middle
+            }
+
+            // Pad the hex section
+            var bytesOnLine = line.Length / 2;
+            var padding = (16 - bytesOnLine) * 3;
+            if (bytesOnLine <= 8) padding++; // Account for middle space
+            formatted.Append(new string(' ', padding));
+
+            // Add ASCII representation
+            formatted.Append("| ");
+            for (int j = 0; j < line.Length; j += 2)
+            {
+                if (j + 1 < line.Length)
+                {
+                    var byteVal = Convert.ToByte(line.Substring(j, 2), 16);
+                    var chr = (byteVal >= 32 && byteVal <= 126) ? (char)byteVal : '.';
+                    formatted.Append(chr);
+                }
+            }
+
+            formatted.AppendLine();
+            address += 16;
+        }
+
+        hexFormatted = formatted.ToString();
+    }
+
+    private void ClearAll()
+    {
+        textInput = "";
+        hexOutput = "";
+        hexFormatted = "";
+        errorMessage = "";
+    }
+
+    private void LoadAsciiSample()
+    {
+        textInput = "Hello, World!\nThis is ASCII text.";
+        ConvertTextToHex();
+    }
+
+    private void LoadUtf8Sample()
+    {
+        textInput = "Hello, 世界! 🌍\nUTF-8 with emoji and unicode.";
+        ConvertTextToHex();
+    }
+
+    private void LoadBinarySample()
+    {
+        hexOutput = "89504E470D0A1A0A0000000D4948445200000020";
+        ConvertHexToText();
+    }
+}

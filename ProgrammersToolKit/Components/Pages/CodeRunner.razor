@@ -1,6 +1,8 @@
 @page "/code-runner"
 @using BlazorMonaco
 @using BlazorMonaco.Editor
+@using ProgrammersToolKit.Services.Interfaces
+@inject ICodeRunnerService CodeRunnerService
 
 <PageTitle>Code Runner - ProgrammersToolKit</PageTitle>
 
@@ -24,7 +26,22 @@
     </div>
 
     <div class="form-group">
-        <button class="btn btn-primary" @onclick="RunCode">Run Code</button>
+        <button class="btn btn-primary" @onclick="RunCode" disabled="@isRunning">
+            @if (isRunning)
+            {
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                <text>&nbsp;Running...</text>
+            }
+            else
+            {
+                <text>Run Code</text>
+            }
+        </button>
+    </div>
+
+    <div class="form-group">
+        <label class="form-label">Input (for stdin):</label>
+        <textarea class="form-control" @bind="codeInput" rows="3" placeholder="Enter input for your program here (optional)..."></textarea>
     </div>
 
     <div class="form-group">
@@ -32,19 +49,21 @@
         <div style="display: flex; gap: 10px; margin-bottom: 10px;">
             <input type="text" class="form-control" @bind="newTestCase" placeholder="Enter test case input..." style="width: 300px;" />
             <button class="btn btn-secondary" @onclick="AddTestCase">Add</button>
-            <button class="btn btn-primary" @onclick="RunAllTestCases">Run All</button>
+            <button class="btn btn-primary" @onclick="RunAllTestCases" disabled="@isRunning">Run All</button>
         </div>
         
         @if (testCases.Any())
         {
             <div style="max-height: 150px; overflow-y: auto; border: 1px solid #ccc; padding: 10px;">
-                @foreach (var testCase in testCases)
+                @foreach (var testCase in testCases.Select((tc, index) => new { TestCase = tc, Index = index }))
                 {
                     <div style="margin-bottom: 5px; padding: 5px; background: #f8f9fa; border-radius: 3px;">
-                        <strong>Input:</strong> @testCase.Input
-                        @if (!string.IsNullOrEmpty(testCase.Output))
+                        <strong>Input:</strong> @testCase.TestCase.Input
+                        <button class="btn btn-sm btn-outline-danger" style="float: right;" @onclick="() => RemoveTestCase(testCase.Index)">×</button>
+                        @if (!string.IsNullOrEmpty(testCase.TestCase.Output))
                         {
-                            <br /><strong>Output:</strong> @testCase.Output
+                            <br /><strong>Output:</strong> 
+                            <pre style="margin: 0; font-size: 12px; background: #e9ecef; padding: 2px;">@testCase.TestCase.Output</pre>
                         }
                     </div>
                 }
@@ -54,7 +73,7 @@
 
     <div class="form-group">
         <label class="form-label">Output:</label>
-        <textarea class="form-control" readonly style="height: 120px; font-family: 'Courier New', monospace;">@output</textarea>
+        <pre class="form-control" readonly style="height: 180px; font-family: 'Courier New', monospace; white-space: pre-wrap; overflow-y: auto;">@output</pre>
     </div>
 </div>
 
@@ -62,7 +81,9 @@
     private StandaloneCodeEditor? codeEditor;
     private string selectedLanguage = "csharp";
     private string output = "";
+    private string codeInput = "";
     private string newTestCase = "";
+    private bool isRunning = false;
     private List<TestCase> testCases = new();
 
     public class TestCase
@@ -104,9 +125,46 @@
     {
         return language switch
         {
-            "csharp" => "using System;\n\nclass Program\n{\n    static void Main()\n    {\n        Console.WriteLine(\"Hello, World!\");\n    }\n}",
-            "python" => "print(\"Hello, World!\")",
-            "javascript" => "console.log(\"Hello, World!\");",
+            "csharp" => @"using System;
+
+class Program
+{
+    static void Main()
+    {
+        Console.WriteLine(""Hello, World!"");
+        
+        // Read input if provided
+        string input = Console.ReadLine();
+        if (!string.IsNullOrEmpty(input))
+        {
+            Console.WriteLine($""You entered: {input}"");
+        }
+    }
+}",
+            "python" => @"print(""Hello, World!"")
+
+# Read input if provided
+try:
+    user_input = input()
+    if user_input:
+        print(f""You entered: {user_input}"")
+except EOFError:
+    pass",
+            "javascript" => @"console.log(""Hello, World!"");
+
+// Read input if provided (Node.js)
+const readline = require('readline');
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+});
+
+rl.question('', (input) => {
+    if (input) {
+        console.log(`You entered: ${input}`);
+    }
+    rl.close();
+});",
             _ => "// Enter your code here"
         };
     }
@@ -117,18 +175,6 @@
         if (codeEditor != null)
         {
             await codeEditor.SetValue(GetDefaultCode(selectedLanguage));
-            // Note: SetModelLanguage may not be available in current BlazorMonaco version
-            // We'll handle language through construction options instead
-        }
-    }
-
-    private async Task OnLanguageChanged(ChangeEventArgs e)
-    {
-        selectedLanguage = e.Value?.ToString() ?? "csharp";
-        if (codeEditor != null)
-        {
-            await codeEditor.SetValue(GetDefaultCode(selectedLanguage));
-            // Note: SetModelLanguage may not be available in current BlazorMonaco version
         }
     }
 
@@ -142,12 +188,36 @@
 
     private async Task RunCode()
     {
-        if (codeEditor == null) return;
+        if (codeEditor == null || isRunning) return;
 
-        var code = await codeEditor.GetValue();
-        
-        // Simulate code execution (in a real implementation, you'd execute the code)
-        output = $"Executing {selectedLanguage} code:\n{code}\n\n[Simulated Output]\nHello, World!\nExecution completed.";
+        isRunning = true;
+        StateHasChanged();
+
+        try
+        {
+            var code = await codeEditor.GetValue();
+            
+            if (string.IsNullOrWhiteSpace(code))
+            {
+                output = "Error: No code to execute";
+                return;
+            }
+
+            output = "Executing code...\n";
+            StateHasChanged();
+
+            var result = await CodeRunnerService.RunCodeWithInputAsync(code, selectedLanguage, codeInput);
+            output = result;
+        }
+        catch (Exception ex)
+        {
+            output = $"Error: {ex.Message}";
+        }
+        finally
+        {
+            isRunning = false;
+            StateHasChanged();
+        }
     }
 
     private void AddTestCase()
@@ -159,14 +229,54 @@
         }
     }
 
+    private void RemoveTestCase(int index)
+    {
+        if (index >= 0 && index < testCases.Count)
+        {
+            testCases.RemoveAt(index);
+        }
+    }
+
     private async Task RunAllTestCases()
     {
-        foreach (var testCase in testCases)
+        if (codeEditor == null || isRunning || !testCases.Any()) return;
+
+        isRunning = true;
+        StateHasChanged();
+
+        try
         {
-            // Simulate running test case
-            testCase.Output = $"Processed: {testCase.Input}";
+            var code = await codeEditor.GetValue();
+            
+            if (string.IsNullOrWhiteSpace(code))
+            {
+                output = "Error: No code to execute";
+                return;
+            }
+
+            output = $"Running {testCases.Count} test cases...\n";
+            StateHasChanged();
+
+            foreach (var testCase in testCases)
+            {
+                testCase.Output = "Running...";
+                StateHasChanged();
+                
+                var result = await CodeRunnerService.RunCodeWithInputAsync(code, selectedLanguage, testCase.Input);
+                testCase.Output = result;
+                StateHasChanged();
+            }
+            
+            output = $"Completed running {testCases.Count} test cases. Check individual results above.";
         }
-        
-        output = $"Ran {testCases.Count} test cases.\nAll test cases completed.";
+        catch (Exception ex)
+        {
+            output = $"Error running test cases: {ex.Message}";
+        }
+        finally
+        {
+            isRunning = false;
+            StateHasChanged();
+        }
     }
 }
