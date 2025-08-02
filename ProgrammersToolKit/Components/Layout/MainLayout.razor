@@ -1,4 +1,5 @@
 @inherits LayoutView
+@inject NavigationManager Navigation
 
 <div class="layout">
     <div class="sidebar">
@@ -7,41 +8,41 @@
         </div>
         <nav class="nav-menu">
             <div class="nav-item">
-                <a href="/api-test" class="nav-link">API Tests</a>
+                <a href="/api-test" class="nav-link @GetActiveClass("/api-test")">API Tests</a>
             </div>
             <div class="nav-item">
-                <a href="/test-results" class="nav-link">Test Results</a>
+                <a href="/test-results" class="nav-link @GetActiveClass("/test-results")">Test Results</a>
             </div>
             <div class="nav-item">
-                <a href="/tools" class="nav-link">Tools</a>
+                <a href="/tools" class="nav-link @GetActiveClass("/tools")">Tools</a>
             </div>
             <div class="nav-separator"></div>
             <div class="nav-item">
-                <a href="/header-inspector" class="nav-link">Header Inspector</a>
+                <a href="/header-inspector" class="nav-link @GetActiveClass("/header-inspector")">Header Inspector</a>
             </div>
             <div class="nav-item">
-                <a href="/encryption" class="nav-link">Encryption/Decryption</a>
+                <a href="/encryption" class="nav-link @GetActiveClass("/encryption")">Encryption/Decryption</a>
             </div>
             <div class="nav-item">
-                <a href="/hex-editor" class="nav-link">Hex Editor</a>
+                <a href="/hex-editor" class="nav-link @GetActiveClass("/hex-editor")">Hex Editor</a>
             </div>
             <div class="nav-item">
-                <a href="/encoding" class="nav-link">Encoding/Decoding</a>
+                <a href="/encoding" class="nav-link @GetActiveClass("/encoding")">Encoding/Decoding</a>
             </div>
             <div class="nav-item">
-                <a href="/cookie-inspector" class="nav-link">Cookie Inspector</a>
+                <a href="/cookie-inspector" class="nav-link @GetActiveClass("/cookie-inspector")">Cookie Inspector</a>
             </div>
             <div class="nav-item">
-                <a href="/code-runner" class="nav-link">Code Runner</a>
+                <a href="/code-runner" class="nav-link @GetActiveClass("/code-runner")">Code Runner</a>
             </div>
             <div class="nav-item">
-                <a href="/diff-editor" class="nav-link">Diff Editor</a>
+                <a href="/diff-editor" class="nav-link @GetActiveClass("/diff-editor")">Diff Editor</a>
             </div>
             <div class="nav-item">
-                <a href="/json-visualizer" class="nav-link">JSON Visualizer</a>
+                <a href="/json-visualizer" class="nav-link @GetActiveClass("/json-visualizer")">JSON Visualizer</a>
             </div>
             <div class="nav-item">
-                <a href="/sql-query" class="nav-link">SQL Query Window</a>
+                <a href="/sql-query" class="nav-link @GetActiveClass("/sql-query")">SQL Query Window</a>
             </div>
         </nav>
         <div class="search-box">
@@ -52,3 +53,11 @@
         @Body
     </main>
 </div>
+
+@code {
+    private string GetActiveClass(string href)
+    {
+        var currentPath = Navigation.ToBaseRelativePath(Navigation.Uri);
+        return currentPath.Equals(href.TrimStart('/'), StringComparison.OrdinalIgnoreCase) ? "active" : "";
+    }
+}
